@@ -1,0 +1,11 @@
+name = "lexiglass-sync"
+main = "src/index.js"
+compatibility_date = "2025-06-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lexiglass"
+# 由 GitHub Actions 用仓库 Secret D1_DATABASE_ID 替换；本地部署时手动填写
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# 口令通过 `wrangler secret put SYNC_TOKEN` 设置，不要写在这里

@@ -1,0 +1,46 @@
+# 部署多设备同步服务到 Cloudflare Workers + D1。
+# 需要的仓库 Secrets：CLOUDFLARE_API_TOKEN、CLOUDFLARE_ACCOUNT_ID、D1_DATABASE_ID、SYNC_TOKEN
+# 在 Actions 页面手动运行；worker/ 有改动时也会自动重新部署。
+name: Deploy sync worker
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['worker/**']
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check secrets
+        run: |
+          for s in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID D1_DATABASE_ID SYNC_TOKEN; do
+            [ -n "${!s}" ] || { echo "::error::缺少仓库 Secret: $s"; exit 1; }
+          done
+        env:
+          D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
+      - name: Fill database id
+        run: sed -i "s/REPLACE_WITH_D1_DATABASE_ID/${{ secrets.D1_DATABASE_ID }}/" wrangler.toml
+      - name: Apply schema
+        run: npx --yes wrangler@4 d1 execute lexiglass --remote --file=schema.sql
+      - name: Deploy
+        run: npx --yes wrangler@4 deploy --var ALLOW_ORIGIN:https://${{ github.repository_owner }}.github.io
+      - name: Set sync token
+        run: printf '%s' "$SYNC_TOKEN" | npx --yes wrangler@4 secret put SYNC_TOKEN
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}

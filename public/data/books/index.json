@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cet6",
+    "name": "六级 CET-6",
+    "desc": "大学英语六级考纲词汇（含四级）",
+    "count": 5407
+  },
+  {
+    "id": "cet6-plus",
+    "name": "六级新增",
+    "desc": "六级考纲中不属于四级的部分",
+    "count": 1956
+  },
+  {
+    "id": "cet4",
+    "name": "四级 CET-4",
+    "desc": "大学英语四级考纲词汇",
+    "count": 3849
+  },
+  {
+    "id": "ky",
+    "name": "考研",
+    "desc": "研究生入学考试英语词汇",
+    "count": 4801
+  },
+  {
+    "id": "ielts",
+    "name": "雅思 IELTS",
+    "desc": "雅思核心词汇",
+    "count": 5040
+  },
+  {
+    "id": "toefl",
+    "name": "托福 TOEFL",
+    "desc": "托福核心词汇",
+    "count": 6974
+  },
+  {
+    "id": "gre",
+    "name": "GRE",
+    "desc": "GRE 词汇",
+    "count": 7504
+  },
+  {
+    "id": "gk",
+    "name": "高考",
+    "desc": "高考英语词汇",
+    "count": 3677
+  }
+]
